@@ -9,7 +9,7 @@ import plotly.express as px
 # -----------------------------
 # Page config
 # -----------------------------
-st.set_page_config(page_title="Exoplanet Classifier", page_icon="🔭", layout="wide")
+st.set_page_config(page_title="Exoplanet Classifier", page_icon="assets/favicon.png", layout="wide")
 
 # -----------------------------
 # Global styling (Dark Space Theme)
@@ -314,6 +314,41 @@ with st.form("manual_input_form"):
                 st.caption("No feature statistics available to compare.")
 
         st.markdown("</div>", unsafe_allow_html=True)
+
+st.divider()
+st.markdown("## 🔍 Model Insights")
+st.markdown(
+    "Explore which physical features influence the model's predictions the most, "
+    "based on SHAP (SHapley Additive exPlanations) analysis."
+)
+
+EXPLAIN_DIR = "models/explainability"
+summary_path = os.path.join(EXPLAIN_DIR, "shap_summary.png")
+bar_path = os.path.join(EXPLAIN_DIR, "shap_bar.png")
+force_path = os.path.join(EXPLAIN_DIR, "shap_force_sample.png")
+
+if os.path.exists(summary_path) and os.path.exists(bar_path):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image(bar_path, caption="Mean Absolute SHAP Values", use_container_width=True)
+    with col2:
+        st.image(summary_path, caption="Global SHAP Summary Plot", use_container_width=True)
+
+    if os.path.exists(force_path):
+        st.markdown("### Example Prediction Explanation")
+        st.image(force_path, caption="SHAP Force Plot — Example Candidate", use_container_width=True)
+
+    st.markdown(
+        """
+        **Interpretation:**  
+        - Each bar represents how strongly a feature contributes to the model's predictions.  
+        - Larger absolute SHAP values indicate greater influence.  
+        - For example, if *Stellar Effective Temperature* (koi_steff) has a large SHAP value,  
+          it means the model relies heavily on it to distinguish confirmed planets from false positives.
+        """
+    )
+else:
+    st.warning("SHAP explainability results not found. Run `python src/explain_model.py` to generate them.")
 
 # -----------------------------
 # Footer
