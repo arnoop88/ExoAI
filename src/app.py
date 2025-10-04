@@ -315,6 +315,9 @@ with st.form("manual_input_form"):
 
         st.markdown("</div>", unsafe_allow_html=True)
 
+# -----------------------------
+# Model Insights
+# -----------------------------
 st.divider()
 st.markdown("## 🔍 Model Insights")
 st.markdown(
