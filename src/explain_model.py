@@ -3,7 +3,7 @@ explain_model.py
 Generate SHAP explanations for the trained exoplanet model.
 Works with RandomForest, XGBoost, and CatBoost models.
 """
-
+import numpy as np
 import os
 import joblib
 import shap
@@ -39,6 +39,19 @@ df = df[features + [target]].dropna()
 X = df[features]
 y = encoder.transform(df[target])
 
+FRIENDLY_NAMES = {
+    "koi_period": "Orbital period",
+    "koi_duration": "Transit duration ",
+    "koi_depth": "Transit depth ",
+    "koi_prad": "Planet radius ",
+    "koi_srad": "Stellar radius ",
+    "koi_steff": "Stellar effective temperature ",
+    "koi_slogg": "Stellar surface gravity "
+}
+
+X_renamed = X.rename(columns=FRIENDLY_NAMES)
+
+
 # -----------------------------
 # SHAP Explainer
 # -----------------------------
@@ -73,7 +86,9 @@ plt.savefig(os.path.join(OUTPUT_DIR, "shap_summary.png"), dpi=150)
 
 # SHAP bar plot
 plt.figure()
-shap.summary_plot(shap_values, X, plot_type="bar", show=False)
+class_names = ["Candidate", "Confirmed", "False Positive"]
+shap.summary_plot(shap_values, X_renamed, class_names=class_names, plot_type="bar", show=False)
+plt.xlabel("")
 plt.title("Mean Absolute SHAP Values")
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "shap_bar.png"), dpi=150)
@@ -111,7 +126,7 @@ expl = shap.Explanation(
     values=shap_vec,
     base_values=expected_val,
     data=sample.iloc[0].values,
-    feature_names=X.columns
+    feature_names=X_renamed.columns
 )
 
 # Plot and save

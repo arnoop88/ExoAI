@@ -182,8 +182,22 @@ else:
 # -----------------------------
 # Header
 # -----------------------------
-st.image("assets/exo_ai_logo.png", use_container_width=False, width=280)
-st.markdown("### Explore the universe of Kepler data through Artificial Intelligence.")
+col1, col2, col3 = st.columns([2.2, 2, 1])
+# Contenedor para la imagen
+with col2:
+    with st.container():
+        st.image("assets/exo_ai_logo.png", width=200)
+
+# Contenedor para el texto, con margen superior para separarlo verticalmente
+with st.container():
+    st.markdown(
+        """
+        <div style="margin-top: 80px; text-align: center;">
+            <h3>Explore the universe of Kepler data through Artificial Intelligence.</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.divider()
 
@@ -339,7 +353,9 @@ if os.path.exists(summary_path) and os.path.exists(bar_path):
 
     if os.path.exists(force_path):
         st.markdown("### Example Prediction Explanation")
-        st.image(force_path, caption="SHAP Force Plot — Example Candidate", use_container_width=True)
+        col1, col2, col3 = st.columns([1, 2.3, 1])
+        with col2:
+            st.image(force_path, caption="SHAP Force Plot — Example Candidate", use_container_width=False, width=900)
 
     st.markdown(
         """
