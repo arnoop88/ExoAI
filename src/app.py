@@ -182,7 +182,7 @@ else:
 # -----------------------------
 # Header
 # -----------------------------
-st.markdown("<h1 style='font-size:44px;'>✨ Exoplanet Classifier 🌌</h1>", unsafe_allow_html=True)
+st.image("assets/exo_ai_logo.png", use_container_width=False, width=280)
 st.markdown("### Explore the universe of Kepler data through Artificial Intelligence.")
 
 st.divider()
