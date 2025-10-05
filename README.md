@@ -23,26 +23,35 @@ Research references:
 - [Electronics 2024: ML Techniques for Exoplanet Discovery](https://www.mdpi.com/2079-9292/13/19/3950)
 
 ### Model pipeline
-1. **Preprocessing:** dataset loading, cleaning, and feature filtering.  
-2. **Feature selection:** physical features such as:
-   - `koi_period` — orbital period  
-   - `koi_duration` — transit duration  
-   - `koi_depth` — transit depth  
-   - `koi_prad` — planet radius  
-   - `koi_srad` — stellar radius  
-   - `koi_steff` — stellar effective temperature  
-   - `koi_slogg` — stellar surface gravity  
-3. **Model:** `RandomForestClassifier` trained on labeled data (CONFIRMED, CANDIDATE, FALSE POSITIVE).  
-4. **Export:** saves model and encoder to `/models`.  
-5. **Class Means:** stores average feature values per class for interpretability.
+1. **Preprocessing**
+- Loads NASA’s Kepler dataset and ignores commented header lines.
+- Cleans missing or invalid values and normalizes key numeric features.
+- Filters to the subset of physically meaningful variables.
+2. **Feature selection**
+Each chosen feature corresponds directly to a measurable property in the transit method:
+   - `koi_period` — orbital period (days)
+   - `koi_duration` — transit duration (hours)
+   - `koi_depth` — transit depth (ppm)
+   - `koi_prad` — planet radius (Earth radii)
+   - `koi_srad` — stellar radius (Solar radii)
+   - `koi_steff` — stellar effective temperature (K)
+   - `koi_slogg` — stellar surface gravity (log g)
+3. **Model Benchmarking & Training**
+- Trains and compares `RandomForest`, `XGBoost`, and `CatBoost` classifiers on the labeled classes: `CONFIRMED`, `CANDIDATE`, and `FALSE POSITIVE`
+- Selects the model with the best accuracy–interpretability trade-off based on validation metrics (Accuracy, F1, ROC-AUC).
+4. **Export**
+- Saves the best-performing model and the fitted label encoder in `/models/`.
+- Generates `model_results.json` and benchmark plots for documentation.
+5. **Class Means**
+- Stores per-class mean values for each feature, used to produce interpretative comparisons (e.g., how a candidate differs from typical confirmed planets).
 
 ## Web Application
 Built with **Streamlit**, the app allows:
 - **CSV upload** for batch predictions.  
-- **Manual input** for single candidates.  
-- **Pie chart visualization** of class probabilities.  
-- **Educational explanations** comparing inputs with class averages.  
-- **Space-themed UI** with gradient blue night mode.
+- **Manual input** for single-candidate prediction.  
+- **Pie chart** of predicted class probabilities.  
+- **Educational interpretation** comparing user inputs with per-class averages.  
+- **Global and local SHAP visualizations** for explainability.
 
 ## Technical Stack
 | Component | Technology |
@@ -54,11 +63,13 @@ Built with **Streamlit**, the app allows:
 
 ## Installation & Run
 ```bash
-git clone https://github.com/arnoop88/exoplanet-ai.git
-cd exoplanet-ai
+git clone https://github.com/arnoop88/ExoAI.git
+cd ExoAI
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python src/train_model.py
+python3 src/train_model.py
+python3 src/benchmark_models.py
+python3 src/explain_model.py
 streamlit run src/app.py
 ```

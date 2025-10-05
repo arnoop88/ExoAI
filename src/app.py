@@ -340,7 +340,7 @@ st.markdown(
 )
 
 EXPLAIN_DIR = "models/explainability"
-summary_path = os.path.join(EXPLAIN_DIR, "shap_summary.png")
+summary_path = os.path.join(EXPLAIN_DIR, "shap_interactions_CONFIRMED.png")
 bar_path = os.path.join(EXPLAIN_DIR, "shap_bar.png")
 force_path = os.path.join(EXPLAIN_DIR, "shap_force_sample.png")
 
@@ -349,21 +349,33 @@ if os.path.exists(summary_path) and os.path.exists(bar_path):
     with col1:
         st.image(bar_path, caption="Mean Absolute SHAP Values", use_container_width=True)
     with col2:
-        st.image(summary_path, caption="Global SHAP Summary Plot", use_container_width=True)
+        st.image(summary_path, caption="Interaction SHAP Summary Plot", use_container_width=True)
 
     if os.path.exists(force_path):
         st.markdown("### Example Prediction Explanation")
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.image(force_path, caption="SHAP Force Plot — Example Candidate", use_container_width=False, width=700)  
+            st.image(force_path, caption="SHAP Force Plot", use_container_width=False, width=700)  
 
     st.markdown(
         """
-        **Interpretation:**  
-        - Each bar represents how strongly a feature contributes to the model's predictions.  
-        - Larger absolute SHAP values indicate greater influence.  
-        - For example, if *Stellar Effective Temperature* (koi_steff) has a large SHAP value,  
-          it means the model relies heavily on it to distinguish confirmed planets from false positives.
+        ### Interpretation Guide
+        
+        **Mean Absolute SHAP Values (Bar Chart)**  
+        This chart shows the overall importance of each physical feature.  
+        Longer bars mean that the variable has a stronger influence on the model's decisions on average.  
+        For example, if *Transit depth* has the largest bar, it's the feature that most consistently drives predictions — just like astronomers rely on the depth of a light curve to identify planets.
+
+        **Global SHAP Summary Plot (Beeswarm)**  
+        This plot reveals how each feature influences predictions across all samples.  
+        Each dot is one observation (a potential planet). The color shows whether the feature value is high (red) or low (blue), and the horizontal position shows its effect on the model output.  
+        Patterns here explain relationships: for instance, shorter *Transit durations* or lower *Stellar gravity* might systematically push predictions toward *false positive*.
+
+        **Single-Sample Waterfall / Force Plot**  
+        This plot decomposes one specific prediction.  
+        It starts from the model's baseline probability (average prediction) and shows how each feature pushes that candidate toward being classified as *confirmed*, *candidate*, or *false positive*.  
+        Features pushing right (red) increase the likelihood, while those pushing left (blue) decrease it.  
+        It's a visual “reasoning trace” — a way to see why the model made its choice.
         """
     )
 else:
