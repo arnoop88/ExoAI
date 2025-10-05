@@ -79,8 +79,8 @@ print("Generating SHAP summary plots...")
 
 # SHAP summary plot (global importance)
 plt.figure()
-shap.summary_plot(shap_values, X, show=False)
-plt.title("Feature Importance — SHAP Summary")
+shap.summary_plot(shap_values, X_renamed, show=False)
+plt.title("Orbital period")
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "shap_summary.png"), dpi=150)
 

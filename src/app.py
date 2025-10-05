@@ -353,9 +353,9 @@ if os.path.exists(summary_path) and os.path.exists(bar_path):
 
     if os.path.exists(force_path):
         st.markdown("### Example Prediction Explanation")
-        col1, col2, col3 = st.columns([1, 2.3, 1])
+        col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.image(force_path, caption="SHAP Force Plot — Example Candidate", use_container_width=False, width=900)
+            st.image(force_path, caption="SHAP Force Plot — Example Candidate", use_container_width=False, width=700)  
 
     st.markdown(
         """
