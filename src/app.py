@@ -204,7 +204,7 @@ st.divider()
 # -----------------------------
 # CSV Upload
 # -----------------------------
-st.markdown("## 📂 Upload CSV Data")
+st.markdown("## Upload CSV Data")
 st.markdown("<p>Upload your Kepler-like table (columns in dataset naming) to batch predict.</p>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader("Upload a CSV with the required columns", type=["csv"])
@@ -234,7 +234,7 @@ st.divider()
 # -----------------------------
 # Manual Input Prediction
 # -----------------------------
-st.markdown("## 🧠 Manual Input Prediction")
+st.markdown("## Manual Input Prediction")
 st.markdown("<p>Enter values for a single candidate and get an instant prediction.</p>", unsafe_allow_html=True)
 
 with st.form("manual_input_form"):
@@ -333,7 +333,7 @@ with st.form("manual_input_form"):
 # Model Insights
 # -----------------------------
 st.divider()
-st.markdown("## 🔍 Model Insights")
+st.markdown("## Model Insights")
 st.markdown(
     "Explore which physical features influence the model's predictions the most, "
     "based on SHAP (SHapley Additive exPlanations) analysis."
